@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Formula1';
+  src: url('assets/fonts/Formula1-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Formula1-Bold';
+  src: url('assets/fonts/Formula1-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tilium';
+  src: url('assets/fonts/TitilliumWeb-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tilium-semi';
+  src: url('assets/fonts/TitilliumWeb-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Porsche';
+  src: url('assets/fonts/porsche-next-latin-regular.b8f1c20.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Porsche-Bold';
+  src: url('assets/fonts/porsche-next-latin-semi-bold.b5f6fca.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #3a3c3d;
+  /* padding: 5vw; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#Foundation {
+  width: 75vw;
+  height: 85vh;
+  background: black;
+  border-radius: 2rem;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#vertical-division {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 16px;
+  height: 100%; /* Needed */
+}
+
+#horizontal-division {
+  display: grid;
+  grid-template-rows: 1fr 3fr;
+  gap: 16px;
+  height: 100%; /* Needed */
+}
+
+#logoText {
+  font-family: 'Formula1-Bold';
+  color: orangered;
+}
+
+#try {
+  background: url('./assets/logo-black.png');
+  color: #808080;
+}
+
+#SiderText{
+  font-family: 'Formula1';
+  color: #808080;
+  font-size: 8.5px;
+}
+
+#SideIcon {
+  filter: invert(63%) sepia(0%) saturate(6664%) hue-rotate(161deg) brightness(79%) contrast(86%);
+}
+
+#SideIcon:active {
+  filter: invert(66%) sepia(85%) saturate(613%) hue-rotate(314deg) brightness(89%) contrast(99%);
+}
+
+#SideBar-low {
+  border-radius: 50%;
+  padding: 5px;
+  background-color: #59936c ;
+}
+
+#nav-title{
+  font-family: 'Formula1-Bold';
+  color: #e2ad5c;
+}
+
+#nav-label{
+  color: white;
+}
