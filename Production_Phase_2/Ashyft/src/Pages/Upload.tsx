@@ -1,5 +1,5 @@
 import React from 'react'
-import FileUpload from '../Sections/FileUpload'
+// import FileUpload from '../Sections/FileUpload'
 
 const Upload: React.FC = () => {
   return (
