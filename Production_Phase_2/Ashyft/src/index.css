@@ -218,3 +218,7 @@ body {
 #visitors {
   font-family: 'Formula1';
 }
+
+.filepond--credits {
+  display: none !important;
+}
