@@ -77,14 +77,16 @@ body {
   display: grid;
   grid-template-columns: 1fr 3fr;
   gap: 16px;
-  height: 100%; /* Needed */
+  height: 100%;
+  /* Needed */
 }
 
 #horizontal-division {
   display: grid;
   grid-template-rows: 1fr 3fr;
   gap: 16px;
-  height: 100%; /* Needed */
+  height: 100%;
+  /* Needed */
 }
 
 #logoText {
@@ -97,33 +99,34 @@ body {
   color: #808080;
 }
 
-#SiderText{
+#SiderText {
   font-family: 'Formula1';
-  color: #808080;
-  font-size: 8.5px;
+  /* color: #808080; */
+  font-size: 8px;
 }
 
 #SideIcon {
   filter: invert(63%) sepia(0%) saturate(6664%) hue-rotate(161deg) brightness(79%) contrast(86%);
 }
 
-#SideIcon:active {
-  filter: invert(66%) sepia(85%) saturate(613%) hue-rotate(314deg) brightness(89%) contrast(99%);
+#SideIcon:hover{
+  filter: invert(78%) sepia(20%) saturate(1098%) hue-rotate(346deg) brightness(92%) contrast(94%);
+  width: 25px !important;
 }
 
 #SideBar-low {
   border-radius: 50%;
   padding: 5px;
-  background-color: #59936c ;
+  background-color: #59936c;
 }
 
-#nav-title{
+#nav-title {
   font-family: 'Formula1-Bold';
   /* color: #e2ad5c; */
   color: #696969;
 }
 
-#nav-label{
+#nav-label {
   color: #d4d1d1;
   font-family: 'Tilium';
   font-size: 14px;
@@ -154,7 +157,8 @@ body {
 }
 
 #canvas::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 #container {
@@ -191,10 +195,10 @@ body {
   gap: 15px;
 
   translate: 0px -25px;
-  z-index: 10;
+  z-index: 30 !important;
 }
 
-#home-section-2-bttn > :nth-child(1).img{
+#home-section-2-bttn> :nth-child(1).img {
   width: 10px;
 }
 
@@ -204,7 +208,8 @@ body {
   filter: invert(0%) sepia(1%) saturate(4%) hue-rotate(320deg) brightness(96%) contrast(104%);
 }
 
-#Server-Card, #SizeChart{
+#Server-Card,
+#SizeChart {
   font-family: 'Tilium';
   color: #d4d1d1;
 }

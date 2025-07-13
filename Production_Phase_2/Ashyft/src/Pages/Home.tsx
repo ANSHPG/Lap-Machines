@@ -1,8 +1,10 @@
 import React from 'react';
 import Sunset from '../assets/imgs/sunset_f1.png';
-import Upload from '../assets/Sides/upload.svg'
+import Upload from '../assets/Sides/upload.png'
+import Download from '../assets/Sides/download.png'
 import ServerChart from '../components/ServerChart'
 import SizeChart from '../components/SizeChart'
+import { Link } from 'react-router-dom'
 
 const Home: React.FC = () => {
   return (
@@ -15,15 +17,17 @@ const Home: React.FC = () => {
           alt="Sunset"
           className="absolute bottom-[-40%] left-0  w-full object-cover h-auto max-h-none"
         />
-        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black/80 to-transparent z-0 pointer-events-none" />
       </div>
 
       <div>
         <div className='flex flex-row gap-4  p-[12px] pl-[35px]'>
-          <button id='home-section-2-bttn' className='bg-[#e3ad5e] text-black'>Upload
+          <Link to='/upload'><button id='home-section-2-bttn' className='bg-[#e3ad5e] text-black cursor-pointer'>Upload
             <img src={Upload} id='home-section-2-bttn-img' alt="" />
+          </button></Link>
+          <button id='home-section-2-bttn' className='bg-[#e2805d] text-black'>Download
+            <img src={Download} id='home-section-2-bttn-img' alt="" />
           </button>
-          <button id='home-section-2-bttn' className='bg-[#e2805d] text-black'>Download</button>
         </div>
         
       </div>
