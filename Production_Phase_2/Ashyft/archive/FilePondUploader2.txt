@@ -1,0 +1,85 @@
+import React, { useRef, useState } from "react";
+import { FilePond, registerPlugin, FilePond as FilePondType } from "react-filepond";
+
+import UploadPond from '@/assets/imgs/uploadPond.svg'
+
+// Plugins
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+
+// CSS
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+// Register plugins
+registerPlugin(
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
+);
+
+const FilePondUploader: React.FC = () => {
+  const [files, setFiles] = useState<any[]>([]);
+  const pondRef = useRef<FilePondType>(null);
+
+  // 🔘 Trigger input click from custom div
+  const handleCustomClick = () => {
+    if (pondRef.current) {
+      const inputEl = (pondRef.current as any)._pond?.element?.querySelector('input[type="file"]');
+      inputEl?.click();
+    }
+  };
+
+  return (
+    <div id="mainDiv" className="w-full max-w-md mx-auto space-y-4">
+      {/* ✅ Custom upload trigger */}
+      <div
+        onClick={handleCustomClick}
+        className="cursor-pointer bg-gray-700 hover:bg-gray-200 border border-dashed border-gray-400 p-6 text-center rounded-lg transition flex flex-col items-center justify-center gap-5"
+      >
+        <div className="">
+          <h1 className="text-xl justify-self-center text-emerald-600 font-['Formula1-Bold']">UPLOAD FILES</h1>
+        </div>
+        <div id="outerDiv" className="border-3 border-dashed border-white rounded-lg">
+          <div id="innerDiv" className="p-[20px] w-[6VW] H-[6VW] bg-amber-300 rounded-lg">
+            <img src={UploadPond} className="w-[50px]" alt="" />
+          </div>
+        </div>
+      </div>
+
+      {/* 🔄 FilePond instance */}
+      <FilePond
+        ref={pondRef}
+        files={files}
+        onupdatefiles={setFiles}
+        allowMultiple={true}
+        maxFiles={5}
+        name="myFile"
+        server={{
+          process: {
+            url: "http://localhost:8080/upload",
+            method: "POST",
+            onload: (res) => {
+              console.log("Upload success:", res);
+              return res;
+            },
+            onerror: (err) => {
+              console.error("Upload error:", err);
+              return err;
+            },
+          },
+        }}
+        labelIdle='📁 <span class="filepond--label-action">Drag & Drop your files here</span> '
+        acceptedFileTypes={["image/*", "application/pdf"]}
+        allowReorder={true}
+        allowImagePreview={true}
+        allowFileSizeValidation={true}
+        maxFileSize="5MB"
+        allowFileTypeValidation={true}
+      />
+    </div>
+  );
+};
+
+export default FilePondUploader;

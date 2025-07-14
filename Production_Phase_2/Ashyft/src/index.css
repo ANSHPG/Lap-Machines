@@ -109,7 +109,7 @@ body {
   filter: invert(63%) sepia(0%) saturate(6664%) hue-rotate(161deg) brightness(79%) contrast(86%);
 }
 
-#SideIcon:hover{
+#SideIcon:hover {
   filter: invert(78%) sepia(20%) saturate(1098%) hue-rotate(346deg) brightness(92%) contrast(94%);
   width: 25px !important;
 }
@@ -219,6 +219,120 @@ body {
   font-family: 'Formula1';
 }
 
+#texture-bg {
+  background: url('./assets/imgs/texture.jpg');
+  background-size: cover;
+  /* ✅ Fit the entire image inside */
+  background-repeat: no-repeat;
+  /* ✅ Prevent tiling */
+  background-position: center;
+  /* ✅ Center the image */
+  border: none;
+
+  color: white; /* optional: for better contrast */
+  overflow: hidden;
+  position: relative;
+
+  /* padding: 3vw; */
+}
+
+#texture-bg::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85); /* ✅ semi-transparent black */
+  z-index: 1;
+}
+
+#texture-bg > * {
+  position: relative;
+  z-index: 2; /* ensures content appears above overlay */
+}
+
+#textur-bg {
+   /* x y blur color */
+    /* box-shadow: rgba(27, 27, 28, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px; */
+    box-shadow: rgba(0, 0, 0, 0.47) 18px -23px 20px 0px inset, rgba(0, 0, 0, 0.35) -8px -36px 30px 20px inset, rgba(0, 0, 0, 0.1) 10px -79px 40px 0px inset, rgba(0, 0, 0, 0.26) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.19) -0px 16px 8px , rgba(0, 0, 0, 0.24) -0px 32px 16px;
+  }
+
+
+
+
 .filepond--credits {
   display: none !important;
 }
+
+/* Add to your global CSS file or Tailwind config */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Add this to App.css or styles.css */
+
+.filepond--label-action{
+  text-decoration: dotted !important;
+  font-family: 'Tilium' !important;
+  color: #8b8b8b !important;
+}
+
+.filepond-root {
+  background-color: #c98929 !important;
+}
+
+.filepond--panel-root {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 2rem;
+}
+
+.filepond--item-panel {
+  background-color: #e2805d !important;
+  border-radius: 2rem;
+}
+
+.filepond--drop-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: black;
+}
+
+.filepond--file {
+  font-family: 'Inter', sans-serif;
+  color: black;
+}
+
+
+/* Optional: Better fit with Aceternity styling */
+/* .filepond--root {
+  background: teal;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.filepond--drop-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: black;
+}
+
+.filepond--panel-root {
+  background: #ffffff08 !important;
+  border: 0px dashed #38bdf8 !important;
+  border-radius: 0.75rem !important;
+}
+
+.filepond--item-panel {
+  background-color: #ffffff1a !important;
+}
+
+.filepond--file {
+  font-family: 'Inter', sans-serif;
+  color: black;
+}  */
