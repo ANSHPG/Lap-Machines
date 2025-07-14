@@ -1,30 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
-
-	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
 func main() {
-	var err error
-
-	// Connect to PostgreSQL
-	connStr := "user=postgres password=anshuman.01 dbname=file_manager sslmode=disable"
-	db, err = sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("DB connection error:", err)
-	}
-	defer db.Close()
-
 	fmt.Println("Server running on :8080")
 
 	http.HandleFunc("/upload", corsMiddleware(fileUploadHandler))
@@ -33,21 +17,26 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+// 🧱 CORS middleware wrapper
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Allow requests from your frontend (Vite dev server)
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
+		// Handle preflight
 		if r.Method == http.MethodOptions {
 			return
 		}
+
 		next(w, r)
 	}
 }
 
+// 📤 Upload handler
 func fileUploadHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(20 << 20)
+	r.ParseMultipartForm(20 << 20) // 20 MB max
 
 	file, info, err := r.FormFile("myFile")
 	if err != nil {
@@ -55,6 +44,10 @@ func fileUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
+
+	fmt.Fprintf(w, "File name: %s\n", info.Filename)
+	fmt.Fprintf(w, "File size: %d\n", info.Size)
+	fmt.Fprintf(w, "MIME header: %v\n", info.Header)
 
 	dst, err := createLocation(info.Filename)
 	if err != nil {
@@ -66,23 +59,10 @@ func fileUploadHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = dst.ReadFrom(file)
 	if err != nil {
 		http.Error(w, "Error writing the file", http.StatusInternalServerError)
-		return
 	}
-
-	// Insert metadata into DB
-	location := filepath.Join("uploads", info.Filename)
-	_, err = db.Exec(`
-		INSERT INTO files (name, size, type, location, uploaded_at)
-		VALUES ($1, $2, $3, $4, $5)
-	`, info.Filename, info.Size, info.Header.Get("Content-Type"), location, time.Now())
-	if err != nil {
-		http.Error(w, "Error saving metadata to database", http.StatusInternalServerError)
-		return
-	}
-
-	fmt.Fprintf(w, "File %s uploaded and metadata stored.\n", info.Filename)
 }
 
+// 📁 Create folder if not exists and create file
 func createLocation(fileName string) (*os.File, error) {
 	if _, err := os.Stat("uploads"); os.IsNotExist(err) {
 		os.Mkdir("uploads", 0755)
@@ -90,6 +70,7 @@ func createLocation(fileName string) (*os.File, error) {
 	return os.Create(filepath.Join("uploads", fileName))
 }
 
+// 📥 Download handler
 func fileDownloadHandler(w http.ResponseWriter, r *http.Request) {
 	fileName := r.URL.Query().Get("file")
 	if fileName == "" {
@@ -105,5 +86,6 @@ func fileDownloadHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
 	w.Header().Set("Content-Type", "application/octet-stream")
+
 	http.ServeFile(w, r, path)
 }
