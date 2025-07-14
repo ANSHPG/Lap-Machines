@@ -19,3 +19,7 @@ CREATE TABLE files (
 ALTER TABLE files
 DROP COLUMN description;
 ```
+
+```go
+go get github.com/lib/pq
+```
