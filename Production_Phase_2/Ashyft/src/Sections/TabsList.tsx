@@ -28,7 +28,7 @@ export default function SidebarTabs() {
           value="home"
 
         >
-         <Link to='/home'> <Sides location={Home} label="home" state={`${activeTab === "home"}`} /> </Link> 
+         <Link to='/'> <Sides location={Home} label="home" state={`${activeTab === "home"}`} /> </Link> 
         </TabsTrigger>
 
         <TabsTrigger
@@ -40,7 +40,7 @@ export default function SidebarTabs() {
         <TabsTrigger
           value="download"
         >
-          <Sides location={Download} label="download" state={`${activeTab === "download"}`} />
+          <Link to='/download'> <Sides location={Download} label="download" state={`${activeTab === "download"}`} /> </Link>
         </TabsTrigger>
       </TabsList>
 

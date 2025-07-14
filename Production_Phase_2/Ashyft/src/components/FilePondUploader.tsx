@@ -51,7 +51,7 @@ const FilePondUploader: React.FC = () => {
       <div
         onClick={handleCustomClick}
         id="textur-bg"
-        className={`relative group cursor-pointer bg-[#e2805d] hover:bg-black border-0 border-dashed  border-gray-400 text-center rounded-[2rem] transition-all duration-500 flex flex-col items-center justify-center ${
+        className={`relative group cursor-pointer bg-[#e2805d] hover:bg-[#000] border-0 border-dashed  border-gray-400 text-center rounded-b-[2rem] rounded-t-lg transition-all duration-500 flex flex-col items-center justify-center ${
           hasFiles
             ? "p-0 h-0 w-0"
             : "p-[5vw] h-[350px] "
@@ -73,7 +73,7 @@ const FilePondUploader: React.FC = () => {
 
             {/* Inner Div */}
             <div className="absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 group-hover:translate-x-[20%] group-hover:-translate-y-[20%] group-hover:opacity-80">
-              <div className="w-full h-full bg-[#b46c4a] rounded-lg flex items-center justify-center">
+              <div className="w-full h-full bg-[#b46c4a] rounded-lg flex items-center justify-center group-hover:bg-[#e2805d]">
                 <img src={UploadPond} className="w-[60px]" alt="upload" />
               </div>
             </div>

@@ -25,9 +25,9 @@ const Home: React.FC = () => {
           <Link to='/upload'><button id='home-section-2-bttn' className='bg-[#e3ad5e] text-black cursor-pointer'>Upload
             <img src={Upload} id='home-section-2-bttn-img' alt="" />
           </button></Link>
-          <button id='home-section-2-bttn' className='bg-[#e2805d] text-black'>Download
+          <Link to='/download'><button id='home-section-2-bttn' className='bg-[#e2805d] text-black cursor-pointer'>Download
             <img src={Download} id='home-section-2-bttn-img' alt="" />
-          </button>
+          </button></Link>
         </div>
         
       </div>
