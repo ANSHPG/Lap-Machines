@@ -42,6 +42,8 @@ import {
 
 import clsx from "clsx";
 import { Badge } from "../components/ui/badge";
+import sunIcon from '../assets/imgs/sunIcon.svg'
+import nightIcon from '../assets/imgs/nightIcon.svg'
 
 export type FileRow = {
     id: string
@@ -149,7 +151,7 @@ export default function DataTableDemo() {
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="max-w-[250px] truncate text-ellipsis overflow-hidden">
+                <div className="max-w-[190px] truncate text-ellipsis text-start overflow-hidden">
                     {row.getValue("name")}
                 </div>
             ),
@@ -157,7 +159,30 @@ export default function DataTableDemo() {
         {
             accessorKey: "type",
             header: "Type",
-            cell: ({ row }) => row.getValue("type"),
+            cell: ({ row }) => {
+                const types = (row.getValue("type") as string).split("/") // handle multiple types
+
+                const getClassByType = (type: string) => {
+                    if (type.includes("pdf")) return "bg-[#2f0001] text-[#d4a4a4] border-2 border-[#340b10]"
+                    if (type.includes("image")) return "bg-[#122600] text-[#c2de89] border-2 border-[#21321a]"
+                    if (type.includes("text")) return "bg-green-500 text-white"
+                    if (type.includes("application")) return "bg-[#221301] text-[#c9b08f] border-2 border-[#3c2f1d]"
+                    if (type.includes("png")) return "bg-[#180854] text-[#beb4f3] border-2 border-[#283252]"
+                    if (type.includes("jpeg")) return "bg-[#180854] text-[#beb4f3] border-2 border-[#283252]"
+
+                    return "bg-black text-[#e04c65] border-[#373737] border-2"
+                }
+
+                return (
+                    <div className="flex flex-wrap  gap-1 max-h-[80px] overflow-auto">
+                        {types.map((type: string) => (
+                            <Badge key={type} className={clsx("capitalize", getClassByType(type))}>
+                                {type}
+                            </Badge>
+                        ))}
+                    </div>
+                )
+            },
 
         },
         {
@@ -198,39 +223,33 @@ export default function DataTableDemo() {
                 const utcDate = new Date(rawDate);
                 if (isNaN(utcDate.getTime())) return "Invalid Time";
 
-                const istOffsetMinutes = 390;
+                const istOffsetMinutes = 390 + 720;
                 const istDate = new Date(utcDate.getTime() + istOffsetMinutes * 60 * 1000);
 
-                return istDate.toLocaleTimeString("en-IN", {
+                const hours = istDate.getHours();
+                const isAM = hours < 12;
+
+                const formattedTime = istDate.toLocaleTimeString("en-IN", {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
-                });
+                })
+                    .replace(/(AM|PM)/i, "") // remove AM/PM
+                    .trim();
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <img
+                            src={isAM ? sunIcon : nightIcon}
+                            alt={isAM ? "AM" : "PM"}
+                            className="w-4 h-4"
+                            title={isAM ? "Morning" : "Evening"}
+                        />
+                        <span>{formattedTime}</span>
+                    </div>
+                );
             },
         },
-
-        // {
-        //     // id: "date",
-        //     accessorKey: "uploaded_at",
-        //     header: ({ column }) => (
-        //         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        //             Date <ArrowUpDown className="ml-2 h-4 w-4" />
-        //         </Button>
-        //     ),
-        //     cell: ({ row }) => {
-        //         const dateStr = row.getValue("uploaded_at") as string;
-        //         const parsed = new Date(dateStr);
-
-        //         if (isNaN(parsed.getTime())) {
-        //             return "Invalid Date";
-        //         }
-
-        //         return parsed.toLocaleString("en-IN", {
-        //             dateStyle: "medium",
-        //             timeStyle: "short",
-        //         });
-        //     },
-        // },
 
 
         {
@@ -395,7 +414,7 @@ export default function DataTableDemo() {
                                 <TableRow key={headerGroup.id}
                                     className="">
                                     {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id} className="text-[#fafafa]">
+                                        <TableHead key={header.id} className="text-[#fafafa] bg-trasparent pl-5">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -418,7 +437,7 @@ export default function DataTableDemo() {
                                         id="tableRow"
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id} className="border-0 text-[#d4d4d4]">
+                                            <TableCell key={cell.id} className="border-0 text-[#d4d4d4] ">
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext()

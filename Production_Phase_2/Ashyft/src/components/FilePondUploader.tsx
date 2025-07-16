@@ -36,26 +36,23 @@ const FilePondUploader: React.FC = () => {
   return (
     <div
       id="main-div"
-      className={`transition-all duration-500 mx-auto flex flex-col items-center ${
-        hasFiles ? "w-[70%] bg-[#262626] rounded-[2rem] p-1" : "w-full max-w-md"
-      } `}
+      className={`transition-all duration-500 mx-auto flex flex-col items-center ${hasFiles ? "w-[70%] bg-[#262626] rounded-[2rem] p-1" : "w-full max-w-md"
+        } `}
     >
       {/* Upload Trigger */}
       <h1
-          className={`transition-all duration-300 text-emerald-600 font-['Formula1-Bold'] ${
-            hasFiles ? "text-[16px]" : "text-xl"
+        className={`transition-all duration-300 text-emerald-600 font-['Formula1-Bold'] ${hasFiles ? "text-[16px]" : "text-xl"
           } hidden `}
-        >
-          UPLOAD FILES
-        </h1>
+      >
+        UPLOAD FILES
+      </h1>
       <div
         onClick={handleCustomClick}
         id="textur-bg"
-        className={`relative group cursor-pointer bg-[#e2805d] hover:bg-[#000] border-0 border-dashed  border-gray-400 text-center rounded-b-[2rem] rounded-t-lg transition-all duration-500 flex flex-col items-center justify-center ${
-          hasFiles
-            ? "p-0 h-0 w-0"
-            : "p-[5vw] h-[350px] "
-        } w-full`}
+        className={`relative group cursor-pointer bg-[#e2805d] hover:bg-[#000] border-0 border-dashed  border-gray-400 text-center rounded-b-[2rem] rounded-t-lg transition-all duration-500 flex flex-col items-center justify-center ${hasFiles
+          ? "p-0 h-0 w-0"
+          : "p-[5vw] h-[350px] "
+          } w-full`}
       >
         {/* <h1
           className={`transition-all duration-300 text-emerald-600 font-['Formula1-Bold'] ${
@@ -109,11 +106,33 @@ const FilePondUploader: React.FC = () => {
             "image/*",
             "application/pdf",
             "application/zip",
+            "application/x-zip-compressed",
+            ".zip",
+            ".mp3",     // MPEG Layer 3
+            ".wav",     // Waveform Audio
+            ".ogg",     // Ogg Vorbis
+            ".flac",    // Free Lossless Audio Codec
+            ".aac",     // Advanced Audio Coding
+            ".m4a",     // MPEG-4 Audio
+            ".wma",     // Windows Media Audio
+            ".opus",    // Opus codec
+            ".aiff",    // Audio Interchange File Format
+            ".alac",     // Apple Lossless Audio Codec,
+            ".mp4",     // MPEG-4
+            ".mov",     // QuickTime Movie
+            ".avi",     // Audio Video Interleave
+            ".wmv",     // Windows Media Video
+            ".flv",     // Flash Video
+            ".mkv",     // Matroska
+            ".webm",    // WebM
+            ".3gp",     // 3GPP
+            ".m4v",     // MPEG-4 Video
+            ".ts"       // MPEG Transport Stream
           ]}
           allowReorder={true}
           allowImagePreview={true}
           allowFileSizeValidation={true}
-          maxFileSize="5MB"
+          maxFileSize="100MB"
           allowFileTypeValidation={true}
           className="border-none"
         />
