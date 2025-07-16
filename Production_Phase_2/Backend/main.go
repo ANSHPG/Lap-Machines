@@ -23,6 +23,14 @@ type FileMeta struct {
 	UploadedAt time.Time `json:"uploaded_at"`
 }
 
+type StorageStats struct {
+	TotalSizeGB    float64 `json:"total_size_gb"`
+	TotalSizeBytes int64   `json:"total_size_bytes"`
+	MaxSizeGB      float64 `json:"max_size_gb"`
+	UsagePercent   float64 `json:"usage_percent"`
+	FileCount      int     `json:"file_count"`
+}
+
 var db *sql.DB
 
 func main() {
@@ -42,6 +50,7 @@ func main() {
 	http.HandleFunc("/download", corsMiddleware(fileDownloadHandler))
 	http.HandleFunc("/files", corsMiddleware(getFilesHandler))
 	http.HandleFunc("/delete", corsMiddleware(deleteFileHandler))
+	http.HandleFunc("/storage-stats", corsMiddleware(getStorageStatsHandler))
 
 	fmt.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -180,6 +189,38 @@ func getFilesHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(files)
+}
+
+func getStorageStatsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var totalSize int64
+	var fileCount int
+
+	err := db.QueryRow("SELECT COALESCE(SUM(size), 0), COUNT(*) FROM files").Scan(&totalSize, &fileCount)
+	if err != nil {
+		log.Printf("Database query error: %v", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+
+	const maxSizeGB = 10.0
+	totalSizeGB := float64(totalSize) / (1024 * 1024 * 1024) // Convert bytes to GB
+	usagePercent := (totalSizeGB / maxSizeGB) * 100
+
+	stats := StorageStats{
+		TotalSizeGB:    totalSizeGB,
+		TotalSizeBytes: totalSize,
+		MaxSizeGB:      maxSizeGB,
+		UsagePercent:   usagePercent,
+		FileCount:      fileCount,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(stats)
 }
 
 func deleteFileHandler(w http.ResponseWriter, r *http.Request) {

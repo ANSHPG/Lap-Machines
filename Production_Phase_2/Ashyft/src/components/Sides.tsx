@@ -15,7 +15,7 @@ const Sides: React.FC<SidesProps> = ({ location, label, state }) => {
   const sideTxt = (state === "true")? "#fdfdfd" : "#808080" 
 
   return (
-    <div className="justify-self-center rounded-lg flex flex-col items-center gap-2 cursor-pointer">
+    <div className="justify-between rounded-lg flex flex-col items-center gap-2 cursor-pointer">
       <img src={location} alt="Icon" style={{filter: filterbg, width: widthIcon}}  className="w-[25px] h-full" id="SideIcon" />
       <h3 id="SiderText" style={{color: sideTxt}}>{label.toUpperCase()}</h3>
     </div>

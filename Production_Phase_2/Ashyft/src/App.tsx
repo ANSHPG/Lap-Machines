@@ -6,7 +6,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute"
 
 function App() {
   return (
-    <div className="">
+    
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<Authenticate />} />
@@ -14,16 +14,15 @@ function App() {
           path="/foundation/*" 
           element={
             <ProtectedRoute>
-              
+              <div className="bg-[#212121] w-full h-full p-[20vw]">
               <Foundation />
-              
+              </div>
             </ProtectedRoute>
           } 
         />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </AuthProvider>
-    </div>
   )
 }
 

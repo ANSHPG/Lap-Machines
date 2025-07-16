@@ -414,7 +414,7 @@ export default function DataTableDemo() {
                                 <TableRow key={headerGroup.id}
                                     className="">
                                     {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id} className="text-[#fafafa] bg-trasparent pl-5">
+                                        <TableHead key={header.id} className="text-[#fafafa] bg-trasparent pl-2">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(

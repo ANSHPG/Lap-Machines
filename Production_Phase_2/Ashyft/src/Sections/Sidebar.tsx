@@ -13,10 +13,16 @@ const Sidebar: React.FC = () => {
     >
       {/* <h2 id="logoText" className='hidden'>LAP.M</h2> */}
       <img src={logo} alt="Lap Machines" className="w-[40px] justify-self-center" />
-      <div className='bg-transparent p-0 '><TabsList/></div>
-      <div id="SideBar-low">
-        <img src={Github} alt="Github" className="w-[35px]" />
-      </div>
+      <div className='bg-transparent p-0 '><TabsList /></div>
+      <a
+        href="https://github.com/ANSHPG/Lap-Machines"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div id="SideBar-low" className="cursor-pointer">
+          <img src={Github} alt="Github" className="w-[35px]" />
+        </div>
+      </a>
     </div>
   );
 };

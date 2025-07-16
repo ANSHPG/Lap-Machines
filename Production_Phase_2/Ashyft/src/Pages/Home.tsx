@@ -22,10 +22,10 @@ const Home: React.FC = () => {
 
       <div>
         <div className='flex flex-row gap-4  p-[12px] pl-[35px]'>
-          <Link to='/upload'><button id='home-section-2-bttn' className='bg-[#e3ad5e] text-black cursor-pointer'>Upload
+          <Link to='/foundation/upload'><button id='home-section-2-bttn' className='bg-[#e3ad5e] text-black cursor-pointer'>Upload
             <img src={Upload} id='home-section-2-bttn-img' alt="" />
           </button></Link>
-          <Link to='/download'><button id='home-section-2-bttn' className='bg-[#e2805d] text-black cursor-pointer'>Download
+          <Link to='/foundation/download'><button id='home-section-2-bttn' className='bg-[#e2805d] text-black cursor-pointer'>Download
             <img src={Download} id='home-section-2-bttn-img' alt="" />
           </button></Link>
         </div>

@@ -19,29 +19,104 @@ import {
 } from "@/components/ui/card"
 import { ChartContainer } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
+import { useEffect, useState } from "react"
 
-export const description = "A radial chart with a custom shape"
+export const description = "A radial chart showing storage usage"
 
-const chartData = [
-  { browser: "safari", visitors: 75, fill: "#e3ad5e" } // Purple
-]
+interface StorageStats {
+  total_size_gb: number
+  total_size_bytes: number
+  max_size_gb: number
+  usage_percent: number
+  file_count: number
+}
 
 const chartConfig = {
-  visitors: {
-    label: "visitors",
+  usage: {
+    label: "Storage Usage",
   },
-  safari: {
-    label: "Safari",
+  storage: {
+    label: "Storage",
     color: "#e3ad5e",
   },
 } satisfies ChartConfig
 
 export default function ChartRadialShape() {
+  const [storageStats, setStorageStats] = useState<StorageStats | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchStorageStats = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/storage-stats')
+        if (!response.ok) {
+          throw new Error('Failed to fetch storage stats')
+        }
+        const data: StorageStats = await response.json()
+        setStorageStats(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchStorageStats()
+    
+    // Optionally, set up polling to update stats periodically
+    const interval = setInterval(fetchStorageStats, 30000) // Update every 30 seconds
+    
+    return () => clearInterval(interval)
+  }, [])
+
+  if (loading) {
+    return (
+      <Card id="SizeChart" className="translate-y-[59vh] w-[50vw] h-[40vh] bg-ablack border-0 flex flex-col">
+        <CardHeader className="items-center pb-0 text-left w-full">
+          <CardTitle>Storage Usage</CardTitle>
+          <CardDescription>Loading...</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0 items-center justify-center">
+          <div className="text-center">Loading storage stats...</div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card id="SizeChart" className="translate-y-[59vh] w-[50vw] h-[40vh] bg-ablack border-0 flex flex-col">
+        <CardHeader className="items-center pb-0 text-left w-full">
+          <CardTitle>Storage Usage</CardTitle>
+          <CardDescription>Error loading data</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 pb-0 items-center justify-center">
+          <div className="text-center text-red-500">{error}</div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (!storageStats) {
+    return null
+  }
+
+  const chartData = [
+    { 
+      storage: "used", 
+      usage: storageStats.usage_percent, 
+      fill: "#e3ad5e" 
+    }
+  ]
+
   return (
-    <Card id="SizeChart" className="translate-y-[59vh] w-[50vw] h-[40vh] bg-ablack border-0 flex flex-col ">
-      <CardHeader className="items-center pb-0 text-left w-full ">
-        <CardTitle>Memory Avaliable</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+    <Card id="SizeChart" className="translate-y-[59vh] w-[50vw] h-[40vh] bg-ablack border-0 flex flex-col">
+      <CardHeader className="items-center pb-0 text-left w-full">
+        <CardTitle>Storage Usage</CardTitle>
+        <CardDescription>
+          {storageStats.file_count} files • {storageStats.total_size_gb.toFixed(4)} GB of {storageStats.max_size_gb} GB used
+        </CardDescription>
       </CardHeader>
 
       <CardContent className="flex-1 pb-0 items-center">
@@ -52,19 +127,19 @@ export default function ChartRadialShape() {
           <RadialBarChart
             data={chartData}
             startAngle={90}
-            endAngle={190}
-            innerRadius={110}
-            outerRadius={190}
+            endAngle={((storageStats.total_size_gb)*36)+90}
+            innerRadius={125}
+            outerRadius={195}
           >
             <PolarGrid
               gridType="circle"
               radialLines={false}
               stroke="#000"
-              polarRadius={[110]}
+              polarRadius={[120]}
               strokeWidth={10}
               className="first:fill-[#470e0e] last:fill-background"
             />
-            <RadialBar dataKey="visitors" fill="#9333ea" background />
+            <RadialBar dataKey="usage" fill="#9333ea" background />
 
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
@@ -81,17 +156,17 @@ export default function ChartRadialShape() {
                           x={viewBox.cx}
                           y={viewBox.cy}
                           className="fill-[#ff4121] text-6xl font-['Formula1-Bold']"
-                          id="#visitors"
+                          id="#usage"
                         >
-                          {chartData[0].visitors.toLocaleString()}
+                          {storageStats.total_size_gb.toFixed(3)}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           dy="1em"
-                          className="fill-[#ff4121] text-sm font-['Formula1']  "
+                          className="fill-[#ff4121] text-sm font-['Formula1']"
                         >
-                          GBs Used
+                          GB Used
                         </tspan>
                       </text>
                     )
@@ -104,12 +179,12 @@ export default function ChartRadialShape() {
         </ChartContainer>
       </CardContent>
 
-      <CardFooter className="flex-col items-start  gap-2 text-sm  translate-y-[-7.5vh] pb-[3.5vh]">
+      <CardFooter className="flex-col items-start gap-2 text-sm translate-y-[-7.5vh] pb-[3.5vh]">
         <div className="flex text-left gap-2 leading-none font-medium">
-          Increased up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {storageStats.usage_percent.toFixed(1)}% of storage used <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total memory avaliable for now onwards
+          {storageStats.file_count} files stored • {(storageStats.max_size_gb - storageStats.total_size_gb).toFixed(2)} GB remaining
         </div>
       </CardFooter>
     </Card>

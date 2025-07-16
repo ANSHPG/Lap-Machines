@@ -57,17 +57,22 @@ body {
 }
 
 body {
-  background-color: #3a3c3d;
+  background-color: #0a0a0a;
   /* back-color: #000000; */
   /* padding: 5vw; */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  overflow: hidden;
 }
 
 #Foundation {
-  width: 75vw;
+  /* width: 100vw;  */
+  width: 75vw; 
+  /* height: 100vh; */
   height: 85vh;
+
   background: black;
   border-radius: 2rem;
   padding: 10px;
@@ -325,6 +330,15 @@ div::-webkit-scrollbar {
 #rowsSelected {
   font-family: 'Formula1';
   font-size: 13px;
+}
+
+#loginTitle {
+  color: #ff4121;
+}
+
+#usernameDiv:focus {
+   border-color: #3f3f3f !important;
+   border-width: 3px !important;
 }
 
 /* .table-container {

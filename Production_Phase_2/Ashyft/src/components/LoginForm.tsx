@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import Logo from "../assets/file.svg"
+
 type LoginFormProps = {
   onSuccess: () => void
 } & React.ComponentProps<"div">
@@ -36,37 +38,39 @@ export default function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
-          <div className="flex size-12 items-center justify-center rounded-md bg-blue-100">
-            <GalleryVerticalEnd className="size-8 text-blue-600" />
+          <div className="flex  items-center justify-center rounded-xl bg-[#470e0e] p-3 w-[4.5vw]  ">
+            <img src={Logo} alt="" className=""/>
           </div>
-          <h1 className="text-2xl font-bold">Welcome to Acme Inc.</h1>
-          <p className="text-center text-sm text-gray-600">
-            Please enter your credentials to continue
+          <h1 className="text-[17px] text-gray-200 font-[Formula1]">Welcome to <span className="font-[Formula1-Bold] text-[20px]" id="loginTitle">LAP MACHINES.</span> </h1>
+          <p className="text-center text-[11px]   font-[Formula1] text-gray-200">
+            Strap in — fire up your home server
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
+          <div className="grid gap-2" id="usernameDiv">
+            <Label htmlFor="username" className="text-[12px] font-[Formula1] text-gray-200">Username</Label>
             <Input
               id="username"
               type="text"
-              placeholder="Enter your username"
+              placeholder="Kindly enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              className="w-[25vw] bg-[#151515] border-[#262626] border-2 focus:border-[#3f3f3f] focus:border-[3px]"
+
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password"  className="text-[12px] font-[Formula1] text-gray-200">Password</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder="Kindly enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pr-10"
+                className="pr-10 bg-[#151515] border-[#262626] border-2 focus:border-[#3f3f3f] focus:border-[3px] "
               />
               <button
                 type="button"
@@ -79,20 +83,17 @@ export default function LoginForm({
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 text-center bg-red-50 p-2 rounded-md">
+            <div className="text-sm text-[#601515] text-center bg-[#ff4121] p-2 rounded-md font-semibold font-[Formula1]">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-[#470e0e] text-[#ff4121] hover:bg-[#601515] cursor-pointer">
             Login
           </Button>
         </form>
       </div>
 
-      <div className="text-center text-xs text-gray-500">
-        <p>Demo credentials: admin / password123</p>
-      </div>
     </div>
   )
 }
