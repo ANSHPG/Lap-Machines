@@ -313,6 +313,19 @@ div::-webkit-scrollbar {
         /* background: transparent; */
       }
 
+#tableRow:hover {
+  background-color: #262626;
+}
+
+.dropMenuItem {
+  margin: 2.5px;
+}
+
+#rowsSelected {
+  font-family: 'Formula1';
+  font-size: 13px;
+}
+
 /* .table-container {
   overflow-x: auto !important;
   overflow-y: auto !important;
