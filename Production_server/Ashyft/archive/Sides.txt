@@ -1,0 +1,18 @@
+import React from 'react';
+
+interface SidesProps {
+  location: string;
+  label: string;
+  state: string;
+}
+
+const Sides: React.FC<SidesProps> = ({ location, label, state }) => {
+  return (
+    <div className="justify-self-center rounded-lg flex flex-col items-center gap-0">
+      <img src={location} alt="Icon" className="w-[30px] fill-blue-700" id="SideIcon"  />
+      <h3 id="SiderText">{label.toUpperCase()}</h3>
+    </div>
+  );
+};
+
+export default Sides;

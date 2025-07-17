@@ -1,0 +1,408 @@
+// src/Sections/DataTable.tsx
+
+"use client"
+
+import * as React from "react"
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table"
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import axios from "axios"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Trash2, Eye, Download } from "lucide-react"
+import { Button } from "../components/ui/button"
+import { Checkbox } from "../components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu"
+import { Input } from "../components/ui/input"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table"
+
+export type FileRow = {
+  id: string
+  name: string
+  type: string
+  size: number
+  location: string
+  uploaded_at: string
+}
+
+export default function DataTableDemo() {
+  const [data, setData] = React.useState<FileRow[]>([])
+  const [selectedIds, setSelectedIds] = React.useState<string[]>([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
+
+  const fetchFiles = async () => {
+    try {
+      const res = await axios.get<FileRow[]>("http://localhost:8080/files")
+      setData(res.data || [])
+    } catch (error) {
+      console.error("Error fetching files:", error)
+      setData([])
+    }
+  }
+
+  React.useEffect(() => {
+    fetchFiles()
+  }, [])
+
+  // Helper function to format file size
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  // Helper function to check if file is previewable
+  const isPreviewable = (type: string): boolean => {
+    return type.startsWith("image/") || type === "application/pdf"
+  }
+
+  // Helper function to download file
+  const downloadFile = (fileName: string) => {
+    const link = document.createElement('a')
+    link.href = `http://localhost:8080/download?file=${encodeURIComponent(fileName)}`
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const columns: ColumnDef<FileRow>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value: boolean) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Name <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => row.getValue("name"),
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: ({ row }) => row.getValue("type"),
+    },
+    {
+      accessorKey: "size",
+      header: "Size",
+      cell: ({ row }) => formatFileSize(row.getValue("size")),
+    },
+    {
+      id: "date",
+      accessorKey: "uploaded_at",
+      header: ({ column }) => (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Date <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const dateValue = row.getValue("uploaded_at") as string
+        try {
+          const date = new Date(dateValue)
+          return date.toLocaleDateString()
+        } catch (error) {
+          return "Invalid Date"
+        }
+      },
+    },
+    {
+      id: "time",
+      accessorKey: "uploaded_at",
+      header: "Time",
+      cell: ({ row }) => {
+        const dateValue = row.getValue("uploaded_at") as string
+        try {
+          const date = new Date(dateValue)
+          return date.toLocaleTimeString()
+        } catch (error) {
+          return "Invalid Time"
+        }
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const file = row.original as FileRow
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="bg-white">
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-amber-300">
+              {isPreviewable(file.type) && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    window.open(`http://localhost:8080/download?file=${encodeURIComponent(file.name)}`, "_blank")
+                  }}
+                >
+                  <Eye className="mr-2 h-4 w-4" /> Preview
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => downloadFile(file.name)}>
+                <Download className="mr-2 h-4 w-4" /> Download
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={async () => {
+                  try {
+                    await axios.post("http://localhost:8080/delete", { ids: [file.id] })
+                    fetchFiles()
+                  } catch (error) {
+                    console.error("Error deleting file:", error)
+                  }
+                }}
+              >
+                <Trash2 className="mr-2 h-4 w-4" /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  })
+
+  const handleBatchDelete = async () => {
+    const ids = table.getFilteredSelectedRowModel().rows.map(row => row.original.id)
+    if (ids.length === 0) return
+    
+    try {
+      await axios.post("http://localhost:8080/delete", { ids })
+      setRowSelection({})
+      fetchFiles()
+    } catch (error) {
+      console.error("Error batch deleting files:", error)
+    }
+  }
+
+  const handleBatchDownload = () => {
+    const files = table.getFilteredSelectedRowModel().rows.map(row => row.original)
+    if (files.length === 0) return
+
+    files.forEach((file, index) => {
+      setTimeout(() => {
+        downloadFile(file.name)
+      }, index * 100)
+    })
+  }
+
+  return (
+    <div className="w-full text-gray-500">
+      <div className="flex items-center py-4 gap-2">
+        <Input
+          placeholder="Search file name..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(e) => table.getColumn("name")?.setFilterValue(e.target.value)}
+          className="max-w-sm"
+        />
+        <Button 
+          variant="outline" 
+          onClick={handleBatchDownload}
+          disabled={table.getFilteredSelectedRowModel().rows.length === 0}
+        >
+          Download Selected ({table.getFilteredSelectedRowModel().rows.length})
+        </Button>
+        <Button 
+          variant="destructive" 
+          onClick={handleBatchDelete}
+          disabled={table.getFilteredSelectedRowModel().rows.length === 0}
+        >
+          Delete Selected ({table.getFilteredSelectedRowModel().rows.length})
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="rounded-md border">
+        <div className="table-container">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+      
+      <style jsx>{`
+        .table-container {
+          overflow-x: auto;
+          overflow-y: auto;
+          max-height: 400px;
+        }
+        
+        .table-container::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .table-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+    </div>
+  )
+}

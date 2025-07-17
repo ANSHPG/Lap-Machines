@@ -1,0 +1,117 @@
+import React, { useRef, useState } from "react";
+import {
+  FilePond,
+  registerPlugin,
+  FilePond as FilePondType,
+} from "react-filepond";
+
+import UploadPond from "@/assets/imgs/uploadPond.svg";
+
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+registerPlugin(
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
+);
+
+const FilePondUploader: React.FC = () => {
+  const [files, setFiles] = useState<any[]>([]);
+  const pondRef = useRef<FilePondType>(null);
+
+  const handleCustomClick = () => {
+    const inputEl = (pondRef.current as any)?._pond?.element?.querySelector(
+      'input[type="file"]'
+    );
+    inputEl?.click();
+  };
+
+  const hasFiles = files.length > 0;
+
+  return (
+    <div
+      id="mainDiv"
+      className={`transition-all duration-500 mx-auto flex flex-col items-center ${
+        hasFiles ? "w-[70%]" : "w-full max-w-md"
+      }`}
+    >
+      {/* Upload Trigger */}
+      <div
+        onClick={handleCustomClick}
+        className={`relative group cursor-pointer bg-gray-700 hover:bg-black border border-dashed border-gray-400 text-center rounded-lg transition-all duration-500 flex flex-col items-center justify-center ${
+          hasFiles
+            ? "p-[1vw] h-[80px]"
+            : "p-[5vw] h-[350px]"
+        } w-full`}
+      >
+        <h1
+          className={`transition-all duration-300 text-emerald-600 font-['Formula1-Bold'] ${
+            hasFiles ? "text-[16px]" : "text-xl"
+          }`}
+        >
+          UPLOAD FILES
+        </h1>
+
+        {/* Only show when no files */}
+        {!hasFiles && (
+          <div className="relative w-[100px] h-[100px] mt-4">
+            {/* Outer Div */}
+            <div className="absolute inset-0 border-2 border-dashed border-white rounded-lg z-0" />
+
+            {/* Inner Div */}
+            <div className="absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 group-hover:translate-x-[20%] group-hover:-translate-y-[20%] group-hover:opacity-50">
+              <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                <img src={UploadPond} className="w-[60px]" alt="upload" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* FilePond container — responsive, no overflow */}
+      <div className="mt-4 w-full max-h-[400px] overflow-auto hide-scrollbar bg-transparent">
+        <FilePond
+          ref={pondRef}
+          files={files}
+          onupdatefiles={setFiles}
+          allowMultiple={true}
+          maxFiles={10}
+          name="myFile"
+          server={{
+            process: {
+              url: "http://localhost:8080/upload",
+              method: "POST",
+              onload: (res) => {
+                console.log("Upload success:", res);
+                return res;
+              },
+              onerror: (err) => {
+                console.error("Upload error:", err);
+                return err;
+              },
+            },
+          }}
+          labelIdle='📁 <span class="filepond--label-action">Drag & Drop your files here</span>'
+          acceptedFileTypes={[
+            "image/*",
+            "application/pdf",
+            "application/zip",
+          ]}
+          allowReorder={true}
+          allowImagePreview={true}
+          allowFileSizeValidation={true}
+          maxFileSize="5MB"
+          allowFileTypeValidation={true}
+          className="border-none"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default FilePondUploader;

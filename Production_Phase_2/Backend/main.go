@@ -41,7 +41,6 @@ func main() {
 	}
 	defer db.Close()
 
-	// Test database connection
 	if err = db.Ping(); err != nil {
 		log.Fatal("Cannot ping database:", err)
 	}
@@ -52,13 +51,26 @@ func main() {
 	http.HandleFunc("/delete", corsMiddleware(deleteFileHandler))
 	http.HandleFunc("/storage-stats", corsMiddleware(getStorageStatsHandler))
 
-	fmt.Println("Server running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Printf("Server running on :%s\n", port)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, nil))
 }
 
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		origin := r.Header.Get("Origin")
+		allowedOrigins := map[string]bool{
+			"http://localhost:5173":     true,
+			"https://192.168.56.1:5173": true, // 🔁 Update to your deployed frontend URL
+		}
+		if allowedOrigins[origin] {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+		}
+
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -76,7 +88,7 @@ func fileUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := r.ParseMultipartForm(20 << 20) // 20MB limit
+	err := r.ParseMultipartForm(20 << 20)
 	if err != nil {
 		http.Error(w, "Error parsing form", http.StatusBadRequest)
 		return
@@ -102,7 +114,6 @@ func fileUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Insert metadata into database
 	location := filepath.Join("uploads", info.Filename)
 	_, err = db.Exec(`
 		INSERT INTO files (name, size, type, location, uploaded_at) 
@@ -180,7 +191,6 @@ func getFilesHandler(w http.ResponseWriter, r *http.Request) {
 		files = append(files, f)
 	}
 
-	// Check for any errors encountered during iteration
 	if err = rows.Err(); err != nil {
 		log.Printf("Rows iteration error: %v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
@@ -208,7 +218,7 @@ func getStorageStatsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	const maxSizeGB = 10.0
-	totalSizeGB := float64(totalSize) / (1024 * 1024 * 1024) // Convert bytes to GB
+	totalSizeGB := float64(totalSize) / (1024 * 1024 * 1024)
 	usagePercent := (totalSizeGB / maxSizeGB) * 100
 
 	stats := StorageStats{
@@ -245,7 +255,6 @@ func deleteFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	deletedCount := 0
 	for _, id := range req.IDs {
-		// First, get the file location to delete the physical file
 		var location string
 		err := db.QueryRow("SELECT location FROM files WHERE file_id = $1", id).Scan(&location)
 		if err != nil {
@@ -253,13 +262,10 @@ func deleteFileHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		// Delete the physical file
 		if err := os.Remove(location); err != nil {
 			log.Printf("Error deleting physical file %s: %v", location, err)
-			// Continue with database deletion even if file deletion fails
 		}
 
-		// Delete from database
 		result, err := db.Exec("DELETE FROM files WHERE file_id = $1", id)
 		if err != nil {
 			log.Printf("Error deleting file with ID %s from database: %v", id, err)

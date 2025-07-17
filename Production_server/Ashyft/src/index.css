@@ -1,0 +1,385 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Formula1';
+  src: url('assets/fonts/Formula1-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Formula1-Bold';
+  src: url('assets/fonts/Formula1-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tilium';
+  src: url('assets/fonts/TitilliumWeb-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tilium-semi';
+  src: url('assets/fonts/TitilliumWeb-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Porsche';
+  src: url('assets/fonts/porsche-next-latin-regular.b8f1c20.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Porsche-Bold';
+  src: url('assets/fonts/porsche-next-latin-semi-bold.b5f6fca.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #0a0a0a;
+  /* back-color: #000000; */
+  /* padding: 5vw; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+#Foundation {
+  /* width: 100vw;  */
+  width: 75vw; 
+  /* height: 100vh; */
+  height: 85vh;
+
+  background: black;
+  border-radius: 2rem;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#vertical-division {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 16px;
+  height: 100%;
+  /* Needed */
+}
+
+#horizontal-division {
+  display: grid;
+  grid-template-rows: 1fr 3fr;
+  gap: 16px;
+  height: 100%;
+  /* Needed */
+}
+
+#logoText {
+  font-family: 'Formula1-Bold';
+  color: orangered;
+}
+
+#try {
+  background: url('./assets/logo-black.png');
+  color: #808080;
+}
+
+#SiderText {
+  font-family: 'Formula1';
+  /* color: #808080; */
+  font-size: 8px;
+}
+
+#SideIcon {
+  filter: invert(63%) sepia(0%) saturate(6664%) hue-rotate(161deg) brightness(79%) contrast(86%);
+}
+
+#SideIcon:hover {
+  filter: invert(78%) sepia(20%) saturate(1098%) hue-rotate(346deg) brightness(92%) contrast(94%);
+  width: 25px !important;
+}
+
+#SideBar-low {
+  border-radius: 50%;
+  padding: 5px;
+  background-color: #59936c;
+}
+
+#nav-title {
+  font-family: 'Formula1-Bold';
+  /* color: #e2ad5c; */
+  color: #696969;
+}
+
+#nav-label {
+  color: #d4d1d1;
+  font-family: 'Tilium';
+  font-size: 14px;
+}
+
+#nav-client {
+  font-family: 'Formula1';
+  color: #e2ad5c;
+}
+
+#nav-client-profile {
+  width: 35px;
+  border-radius: 50%;
+}
+
+#sub-menu-label {
+  color: #f5f5f5;
+  font-family: 'Tilium';
+}
+
+.logout {
+  color: #f16063 !important;
+}
+
+.server {
+  color: #e2ad5c !important;
+  color: #c98929;
+}
+
+#canvas::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+#container {
+  position: relative;
+}
+
+#gradient {
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  position: absolutes;
+  top: 0;
+  left: 0;
+}
+
+#Home-img {
+  display: block;
+  object-fit: cover;
+}
+
+#home-section-2-bttn {
+  font-family: 'Formula1';
+  font-size: 20px;
+  padding: 10px;
+
+  border-color: #5447df;
+  border-width: 0x;
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  translate: 0px -25px;
+  z-index: 30 !important;
+}
+
+#home-section-2-bttn> :nth-child(1).img {
+  width: 10px;
+}
+
+#home-section-2-bttn-img {
+  width: 30px;
+  /* filter: invert(51%) sepia(23%) saturate(599%) hue-rotate(90deg) brightness(97%) contrast(91%); */
+  filter: invert(0%) sepia(1%) saturate(4%) hue-rotate(320deg) brightness(96%) contrast(104%);
+}
+
+#Server-Card,
+#SizeChart {
+  font-family: 'Tilium';
+  color: #d4d1d1;
+}
+
+
+#visitors {
+  font-family: 'Formula1';
+}
+
+#texture-bg {
+  background: url('./assets/imgs/texture.jpg');
+  background-size: cover;
+  /* ✅ Fit the entire image inside */
+  background-repeat: no-repeat;
+  /* ✅ Prevent tiling */
+  background-position: center;
+  /* ✅ Center the image */
+  border: none;
+
+  color: white; /* optional: for better contrast */
+  overflow: hidden;
+  position: relative;
+
+  /* padding: 3vw; */
+}
+
+#texture-bg::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85); /* ✅ semi-transparent black */
+  z-index: 1;
+}
+
+#texture-bg > * {
+  position: relative;
+  z-index: 2; /* ensures content appears above overlay */
+}
+
+#textur-bg {
+   /* x y blur color */
+    /* box-shadow: rgba(27, 27, 28, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px; */
+    box-shadow: rgba(0, 0, 0, 0.47) 18px -23px 20px 0px inset, rgba(0, 0, 0, 0.35) -8px -36px 30px 20px inset, rgba(0, 0, 0, 0.1) 10px -79px 40px 0px inset, rgba(0, 0, 0, 0.26) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.19) -0px 16px 8px , rgba(0, 0, 0, 0.2) -0px 32px 16px;
+  }
+
+
+
+
+.filepond--credits {
+  display: none !important;
+}
+
+/* Add to your global CSS file or Tailwind config */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Add this to App.css or styles.css */
+
+.filepond--label-action{
+  text-decoration: dotted !important;
+  font-family: 'Tilium' !important;
+  color: #8b8b8b !important;
+}
+
+.filepond-root {
+  background-color: #c98929 !important;
+}
+
+.filepond--panel-root {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 2rem;
+}
+
+.filepond--item-panel {
+  background-color: #e2805d !important;
+  border-radius: 2rem;
+}
+
+.filepond--drop-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: black;
+}
+
+.filepond--file {
+  font-family: 'Inter', sans-serif;
+  color: black;
+}
+
+div::-webkit-scrollbar {
+        display: none;
+        /* background: transparent; */
+      }
+
+#tableRow:hover {
+  background-color: #262626;
+}
+
+.dropMenuItem {
+  margin: 2.5px;
+}
+
+#rowsSelected {
+  font-family: 'Formula1';
+  font-size: 13px;
+}
+
+#loginTitle {
+  color: #ff4121;
+}
+
+#usernameDiv:focus {
+   border-color: #3f3f3f !important;
+   border-width: 3px !important;
+}
+
+/* .table-container {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  max-height: 400px !important;
+}
+
+.table-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+.table-container {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+} */
+
+/* Optional: Better fit with Aceternity styling */
+/* .filepond--root {
+  background: teal;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.filepond--drop-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: black;
+}
+
+.filepond--panel-root {
+  background: #ffffff08 !important;
+  border: 0px dashed #38bdf8 !important;
+  border-radius: 0.75rem !important;
+}
+
+.filepond--item-panel {
+  background-color: #ffffff1a !important;
+}
+
+.filepond--file {
+  font-family: 'Inter', sans-serif;
+  color: black;
+}  */

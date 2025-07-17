@@ -41,6 +41,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+// ✅ Dynamic API URL
+const backendBaseURL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8080"
+    : "https://192.168.56.1:8080" // 🔁 Replace with your actual server domain/IP
+
 export default function ChartRadialShape() {
   const [storageStats, setStorageStats] = useState<StorageStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -49,24 +55,22 @@ export default function ChartRadialShape() {
   useEffect(() => {
     const fetchStorageStats = async () => {
       try {
-        const response = await fetch('http://localhost:8080/storage-stats')
+        const response = await fetch(`${backendBaseURL}/storage-stats`)
         if (!response.ok) {
-          throw new Error('Failed to fetch storage stats')
+          throw new Error("Failed to fetch storage stats")
         }
         const data: StorageStats = await response.json()
         setStorageStats(data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
+        setError(err instanceof Error ? err.message : "An error occurred")
       } finally {
         setLoading(false)
       }
     }
 
     fetchStorageStats()
-    
-    // Optionally, set up polling to update stats periodically
-    const interval = setInterval(fetchStorageStats, 30000) // Update every 30 seconds
-    
+
+    const interval = setInterval(fetchStorageStats, 30000)
     return () => clearInterval(interval)
   }, [])
 
@@ -98,16 +102,14 @@ export default function ChartRadialShape() {
     )
   }
 
-  if (!storageStats) {
-    return null
-  }
+  if (!storageStats) return null
 
   const chartData = [
-    { 
-      storage: "used", 
-      usage: storageStats.usage_percent, 
-      fill: "#e3ad5e" 
-    }
+    {
+      storage: "used",
+      usage: storageStats.usage_percent,
+      fill: "#e3ad5e",
+    },
   ]
 
   return (
@@ -127,7 +129,7 @@ export default function ChartRadialShape() {
           <RadialBarChart
             data={chartData}
             startAngle={90}
-            endAngle={((storageStats.total_size_gb)*36)+90}
+            endAngle={((storageStats.total_size_gb) * 36) + 90}
             innerRadius={125}
             outerRadius={195}
           >

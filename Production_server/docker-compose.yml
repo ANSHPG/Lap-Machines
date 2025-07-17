@@ -1,0 +1,48 @@
+# version: "3.8"
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: anshuman.01
+      POSTGRES_DB: file_manager
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./Postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+
+  backend:
+    build: ./Backend
+    container_name: file_backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - PORT=8080
+      - FRONTEND_URL=http://localhost:5173 # or http://<REMOTE_PC_IP>:5173
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./Ashyft
+      dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=http://localhost:8080  # or use http://<REMOTE_PC_IP>:8080 for deployment
+    container_name: file_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  pgdata:
