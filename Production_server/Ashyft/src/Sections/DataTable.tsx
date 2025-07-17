@@ -226,7 +226,7 @@ export default function DataTableDemo() {
                 const utcDate = new Date(rawDate);
                 if (isNaN(utcDate.getTime())) return "Invalid Time";
 
-                const istOffsetMinutes = 390 + 720;
+                const istOffsetMinutes = 0;
                 const istDate = new Date(utcDate.getTime() + istOffsetMinutes * 60 * 1000);
 
                 const hours = istDate.getHours();
