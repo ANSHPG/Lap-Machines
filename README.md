@@ -16,6 +16,13 @@
 ## 📊 User Journey in Walthroh
 https://github.com/user-attachments/assets/5496dce9-0e8d-400b-9142-f6e21aecc63c
 
+## Server Stills
+<div align="left">
+  <img src="https://github.com/user-attachments/assets/9e8f6ff7-8758-4208-bbe4-044d9b097742" width="40%" />
+  <img src="https://github.com/user-attachments/assets/68f7bc56-1187-4512-b845-b57dee87f575" width="40%" />
+</div>
+
+
 
 
 
