@@ -1,4 +1,3 @@
-# Lap-Machines
 # Lap Machines
 
 <div align="center">
@@ -72,9 +71,9 @@ Lap Machines is a sophisticated file management system that enables rapid file u
 ### Frontend (Ashyft)
 - React 18.x with TypeScript
 - Vite for build tooling
-- TailwindCSS for styling
-- Shadcn UI components
-- File handling libraries
+- TailwindCSS for styling [If ShadCN fails to set up TailwindCSS properly, switch to this approach](https://tailwindcss.com/docs/installation/using-vite)
+- Shadcn UI components [for vite](https://ui.shadcn.com/docs/installation/vite)
+- File handling libraries [React FilePond](https://www.npmjs.com/package/react-filepond)
 - Nginx for serving static content
 
 ### Backend (Go)
