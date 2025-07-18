@@ -13,6 +13,12 @@
 
 </div>
 
+## 📊 User Journey in Walthroh
+https://github.com/user-attachments/assets/5496dce9-0e8d-400b-9142-f6e21aecc63c
+
+
+
+
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [⚠️ Important Notice](#important-notice)
