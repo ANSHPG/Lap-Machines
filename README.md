@@ -1,6 +1,8 @@
+<img width="100" height="75" alt="logo-custom" style="border-radius:10px" src="https://github.com/user-attachments/assets/a533dece-f6bb-49f7-a1ef-e699b54c1c27" /> 
+
 # Lap Machines
 
-<div align="center">
+<div align="left">
 
 ![Version](https://img.shields.io/badge/version-1.0.1-blue.svg?cacheSeconds=2592000)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
